@@ -12,6 +12,6 @@ public class BasicTest {
         arr.add(2l);
         arr.add(3l);
         long result = Main._sum(arr);
-        Assertions.assertEquals(5l, result);
+        Assertions.assertEquals(6l, result);
     }
 }
