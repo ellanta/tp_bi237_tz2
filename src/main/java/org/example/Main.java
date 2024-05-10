@@ -42,15 +42,22 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Введите имя файла с расширением: ");
+        String file_name = scanner.nextLine();
+        scanner.close();
         try {
             ArrayList<Long> arr = new ArrayList<Long>();
-            File file = new File("123.txt");
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNext()) {
-                long number = scanner.nextLong();
+            File file = new File(file_name);
+            Scanner scanner2 = new Scanner(file);
+            while (scanner2.hasNext()) {
+                long number = scanner2.nextLong();
                 arr.add(number);
             }
-            System.out.println(_min(arr));
+            System.out.println("Минимальное: " + _min(arr));
+            System.out.println("Максимальное: " + _max(arr));
+            System.out.println("Сумма: " + _sum(arr));
+            System.out.println("Произведение: " + _mult(arr));
         } catch(Exception e) {
             System.out.println("File is not found");
         }
