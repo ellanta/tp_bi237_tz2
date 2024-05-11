@@ -20,9 +20,35 @@ jobs:
       - name: Test
         run: mvn --batch-mode test
 
-      - name: "telegram Notification"
-        uses: "appleboy/telegram-action@master"
+  telegram_success:
+    if: success()
+    needs: [ build ]
+    name: Telegram_success
+    runs-on: ubuntu-latest
+    steps:
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          to: ${{ secrets.TELEGRAM_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          args: New version published
+          message: |
+            ${{ github.actor }} created commit:
+            Commit message: ${{ github.event.commits[0].message }}
+            Repository: ${{ github.repository }}
+            Status: all tests passed
+    telegram_failure:
+      if: failure()
+      needs: [ build ]
+      name: Telegram_failure
+      runs-on: ubuntu-latest
+      steps:
+        - name: send telegram message on push
+          uses: appleboy/telegram-action@master
+          with:
+            to: ${{ secrets.TELEGRAM_ID }}
+            token: ${{ secrets.TELEGRAM_TOKEN }}
+            message: |
+              ${{ github.actor }} created commit:
+              Commit message: ${{ github.event.commits[0].message }}
+              Repository: ${{ github.repository }}
+              Status: some tests are failing
