@@ -19,36 +19,31 @@ jobs:
         run: mvn --batch-mode -DskipTests package
       - name: Test
         run: mvn --batch-mode test
-
-  telegram_success:
-    if: success()
-    needs: [ build ]
-    name: Telegram_success
-    runs-on: ubuntu-latest
-    steps:
-      - name: send telegram message on push
+      - name: Notify Telegram on failure
+        if: failure()
         uses: appleboy/telegram-action@master
         with:
-          to: ${{ secrets.TELEGRAM_ID }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
           message: |
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}
-            Repository: ${{ github.repository }}
-            Status: all tests passed
-    telegram_failure:
-      if: failure()
-      needs: [ build ]
-      name: Telegram_failure
-      runs-on: ubuntu-latest
-      steps:
-        - name: send telegram message on push
-          uses: appleboy/telegram-action@master
-          with:
-            to: ${{ secrets.TELEGRAM_ID }}
-            token: ${{ secrets.TELEGRAM_TOKEN }}
-            message: |
-              ${{ github.actor }} created commit:
-              Commit message: ${{ github.event.commits[0].message }}
-              Repository: ${{ github.repository }}
-              Status: some tests are failing
+            Build Failed
+            *Repository*: ${{ github.repository }}
+            *Actor*: ${{ github.actor }}
+            *Commit*: ${{ github.sha }}
+            *Message*: ${{ github.event.head_commit.message }}
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      - name: Notify Telegram on success
+        if: success()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            ВСЕ ОК
+            *Repository*: ${{ github.repository }}
+            *Actor*: ${{ github.actor }}
+            *Commit*: ${{ github.sha }}
+            *Message*: ${{ github.event.head_commit.message }}
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
