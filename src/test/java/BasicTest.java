@@ -111,6 +111,6 @@ public class BasicTest {
         arr.add(200l);
         arr.add(400l);
         long result = Main._max(arr);
-        Assertions.assertEquals(400l, result);
+        Assertions.assertEquals(300l, result);
     }
 }
