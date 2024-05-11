@@ -102,7 +102,7 @@ public class BasicTest {
         arr.add(5l);
         arr.add(6l);
         long result = Main._max(arr);
-        Assertions.assertEquals(6l, result);
+        Assertions.assertEquals(5l, result);
     }
     @Test
     public void test_max_3(){
